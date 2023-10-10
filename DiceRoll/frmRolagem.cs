@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Security;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +18,7 @@ namespace DiceRoll
         {
             InitializeComponent();
         }
-        public bool teste;
+
 
         private void DiceSelect_Click(object sender, EventArgs e)
         { 
@@ -45,6 +46,8 @@ namespace DiceRoll
                 ordenaDec(dado, int.Parse(numQntDad.Value.ToString()));
                 string dadosordenados = "";
                 int somadosdados = 0;
+                string escritasoma = "";
+
                 for (int i = 0; i < dado.Length; i++)
                 {
                     //Este if serve para quando chegar no último item do vetor, ele somar o valor na variável sem a vírgula, e acabar com o laço
@@ -56,8 +59,19 @@ namespace DiceRoll
                     }
                     dadosordenados += dado[i].ToString() + " + ";
                     somadosdados += dado[i];
+                    
                 }
-                MessageBox.Show("A Soma das Rolagens é: " + (somadosdados + numSoma.Value) + " (" + dadosordenados + " + " + numSoma.Value.ToString() + ")" );
+                if(numSoma.Value < 0)
+                {
+                    escritasoma = "- " + (numSoma.Value * (-1)); 
+                }
+                if(numSoma.Value > 0)
+                {
+                    escritasoma = " + " + numSoma.Value.ToString();
+                }
+
+
+                MessageBox.Show("A Soma das Rolagens é: " + (somadosdados + numSoma.Value) + " (" + dadosordenados + escritasoma + ")" );
             }
             //Verifica se a opção de soma não está selecionada
             if (!chkSoma.Checked)
@@ -66,7 +80,17 @@ namespace DiceRoll
                 if ((numQntDad.Value == 1) || (numQntDad.Value == 0)) { 
                     int soma1 = random.Next(1, int.Parse(((Button)sender).Text));
                     string resultado = (soma1 + numSoma.Value).ToString();
-                    MessageBox.Show("O Resultado do dado é: " + resultado + " ("+ soma1 + " + "+ numSoma.Value.ToString() + ")");
+                    string escritasoma = "";
+
+                    if(numSoma.Value < 0)
+                    {
+                        escritasoma = " (" + soma1 + " - " + (numSoma.Value * (-1)) + ")";
+                    }
+                    if (numSoma.Value > 0)
+                    {
+                        escritasoma = " (" + soma1 + " + " + numSoma.Value + ")";
+                    }
+                    MessageBox.Show("O Resultado do dado é: " + resultado + escritasoma);
                 }
                  // Rolagem de Dados múltiplos:
                 if(numQntDad.Value > 1)
@@ -91,8 +115,19 @@ namespace DiceRoll
                                 continue;
                             }
                             dadosordenados += dado[i].ToString() + ", ";
+
                         }
-                        MessageBox.Show("O Menor resultado foi: " + (dado[0] + int.Parse(numSoma.Value.ToString()) + " (" + dado[0] + " + " + numSoma.Value.ToString() + ")" + "\n\nresultados:" + dadosordenados));
+                        string escritasoma = "";
+
+                        if (numSoma.Value < 0)
+                        {
+                            escritasoma = " (" + dado[0] + " - " + (numSoma.Value * (-1)) + ")";
+                        }
+                        if (numSoma.Value > 0)
+                        {
+                            escritasoma = " (" + dado[0] + " + " + numSoma.Value + ")";
+                        }
+                            MessageBox.Show("O Menor resultado foi: " + (dado[0] + numSoma.Value) + escritasoma + "\n\nresultados:" + dadosordenados);
 
                     }
                     if (!chkPior.Checked)
@@ -113,11 +148,21 @@ namespace DiceRoll
                         if(i == dado.Length - 1)
                         {
                             dadosordenados += dado[i].ToString();
-                            break;
+                            continue;
                         }
                         dadosordenados += dado[i].ToString() + ", ";
                     }
-                    MessageBox.Show("O maior resultado foi: "+ (dado[0] + int.Parse(numSoma.Value.ToString()) + " (" + dado[0] + " + " + numSoma.Value.ToString() + ")" +"\n\nresultados:" + dadosordenados));
+                        string escritasoma = "";
+
+                        if (numSoma.Value < 0)
+                        {
+                            escritasoma = " (" + dado[0] + " - " + (numSoma.Value * (-1)) + ")";
+                        }
+                        if (numSoma.Value > 0)
+                        {
+                            escritasoma = " (" + dado[0] + " + " + numSoma.Value + ")";
+                        }
+                        MessageBox.Show("O maior resultado foi: "+ (dado[0] + numSoma.Value) + escritasoma +"\n\nresultados:" + dadosordenados);
                     }
                 }
             }
@@ -156,27 +201,22 @@ namespace DiceRoll
         }
 
         private void numQntDad_ValueChanged(object sender, EventArgs e)
-        {
-             teste = Validate(true);
-
-            MessageBox.Show(teste.ToString());
-
+        { 
             if (!(((NumericUpDown)sender).Value.ToString().IndexOf(',') == -1))
-            {
-                MessageBox.Show("Não usa valor decimal bobão! >:(");
+            { 
                 ((NumericUpDown)sender).Value = 0;
             }
         }
 
         private void numQntDad_Validating(object sender, CancelEventArgs e)
         {
-            MessageBox.Show("");
+            
             
         }
 
         private void numQntDad_Validated(object sender, EventArgs e)
         {
-            MessageBox.Show("Validated");
+     
         }
         
     }

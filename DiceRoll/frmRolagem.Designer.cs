@@ -274,8 +274,6 @@
             this.numQntDad.Size = new System.Drawing.Size(120, 38);
             this.numQntDad.TabIndex = 16;
             this.numQntDad.ValueChanged += new System.EventHandler(this.numQntDad_ValueChanged);
-            this.numQntDad.Validating += new System.ComponentModel.CancelEventHandler(this.numQntDad_Validating);
-            this.numQntDad.Validated += new System.EventHandler(this.numQntDad_Validated);
             // 
             // numSoma
             // 
